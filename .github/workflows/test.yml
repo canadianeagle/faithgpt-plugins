@@ -1,0 +1,103 @@
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  detector:
+    name: Scripture reference detector
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      # No install step on purpose. The detector has no dependencies, which is
+      # what lets the write hook run it on every file without a network call.
+      - name: Detector assertions
+        run: node faithgpt/tests/detect-scripture-refs.test.mjs
+
+  manifests:
+    name: Manifests and marketplace
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Every manifest is valid JSON
+        run: |
+          for f in .claude-plugin/marketplace.json \
+                   .agents/plugins/marketplace.json \
+                   faithgpt/.claude-plugin/plugin.json \
+                   faithgpt/plugin.json \
+                   faithgpt/.mcp.json \
+                   faithgpt/mcp.json \
+                   faithgpt/hooks/hooks.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || exit 1
+            echo "ok  $f"
+          done
+      - name: Both manifests agree on name and version
+        run: |
+          node -e '
+            const fs = require("fs");
+            const read = p => JSON.parse(fs.readFileSync(p, "utf8"));
+            const claude = read("faithgpt/.claude-plugin/plugin.json");
+            const portable = read("faithgpt/plugin.json");
+            const market = read(".claude-plugin/marketplace.json");
+            const fail = m => { console.error(m); process.exit(1); };
+            if (portable.name !== claude.name) fail("name drift between manifests");
+            if (portable.version !== claude.version) fail("version drift between manifests");
+            if (market.plugins[0].version !== claude.version) fail("marketplace version drift");
+            // A plugin server named faithgpt is shadowed by a user scoped server
+            // of the same name, which the connector setup docs tell people to create.
+            const server = Object.keys(read("faithgpt/.mcp.json").mcpServers)[0];
+            if (server === "faithgpt") fail("MCP server name collides with the user scoped server");
+            console.log(`ok  ${claude.name} ${claude.version}, mcp server "${server}"`);
+          '
+      - name: Every skill declares a frontmatter name
+        run: |
+          node -e '
+            const fs = require("fs");
+            let bad = 0;
+            for (const dir of fs.readdirSync("faithgpt/skills")) {
+              const body = fs.readFileSync(`faithgpt/skills/${dir}/SKILL.md`, "utf8");
+              if (!new RegExp(`^name:\\s*${dir}$`, "m").test(body)) {
+                console.error(`missing or mismatched frontmatter name: ${dir}`);
+                bad++;
+              }
+            }
+            if (bad) process.exit(1);
+            console.log("ok  all skills named");
+          '
+
+  hook:
+    name: Write hook is opt-in and non-blocking
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Silent when the option is off
+        run: |
+          out=$(printf '{"tool_input":{"file_path":"README.md"}}' \
+            | CLAUDE_PLUGIN_ROOT="$PWD/faithgpt" bash faithgpt/scripts/verify-on-write.sh)
+          test -z "$out" || { echo "hook spoke while disabled: $out"; exit 1; }
+          echo "ok  silent when off"
+      - name: Reports references when the option is on
+        run: |
+          printf 'For God so loved the world (John 3:16)\n' > /tmp/devo.md
+          out=$(printf '{"tool_input":{"file_path":"/tmp/devo.md"}}' \
+            | CLAUDE_PLUGIN_OPTION_VERIFY_SCRIPTURE_ON_WRITE=true \
+              CLAUDE_PLUGIN_ROOT="$PWD/faithgpt" bash faithgpt/scripts/verify-on-write.sh)
+          echo "$out" | grep -q "John 3:16" || { echo "hook missed the reference"; exit 1; }
+          echo "ok  reports when on"
+      - name: Survives a malformed payload
+        run: |
+          printf 'not json' | CLAUDE_PLUGIN_OPTION_VERIFY_SCRIPTURE_ON_WRITE=true \
+            CLAUDE_PLUGIN_ROOT="$PWD/faithgpt" bash faithgpt/scripts/verify-on-write.sh
+          echo "ok  exit 0 on garbage"
