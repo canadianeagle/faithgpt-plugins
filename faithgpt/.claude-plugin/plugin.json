@@ -23,7 +23,6 @@
     "sermon",
     "ministry"
   ],
-  "mcpServers": "./.mcp.json",
   "userConfig": {
     "default_translation": {
       "type": "string",
