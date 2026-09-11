@@ -17,7 +17,7 @@ claude plugin install faithgpt@faithgpt
 
 ```bash
 codex plugin marketplace add canadianeagle/faithgpt-plugins
-codex plugin add faithgpt
+codex plugin add faithgpt@faithgpt
 ```
 
 The first tool call opens the FaithGPT consent screen. Sign in with your FaithGPT account; a free account works.
