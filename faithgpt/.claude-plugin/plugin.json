@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "faithgpt",
+  "displayName": "FaithGPT",
+  "version": "1.0.0",
+  "description": "Scripture-grounded Bible study, devotionals, and doctrine review. Every verse is fetched from FaithGPT's Bible database instead of recalled from memory, so quotations are real and correctly attributed.",
+  "author": {
+    "name": "FAITHGPT AI INC",
+    "email": "hello@faithgpt.io",
+    "url": "https://www.faithgpt.io"
+  },
+  "homepage": "https://www.faithgpt.io/api/mcp/",
+  "repository": "https://github.com/canadianeagle/faithgpt-plugins",
+  "license": "MIT",
+  "keywords": [
+    "bible",
+    "scripture",
+    "christian",
+    "theology",
+    "devotional",
+    "prayer",
+    "doctrine",
+    "sermon",
+    "ministry"
+  ],
+  "mcpServers": "./.mcp.json",
+  "userConfig": {
+    "default_translation": {
+      "type": "string",
+      "title": "Default Bible translation",
+      "description": "Translation used when you do not name one. FaithGPT serves KJV, ASV, and YLT.",
+      "required": false,
+      "default": "KJV"
+    },
+    "verify_scripture_on_write": {
+      "type": "boolean",
+      "title": "Flag Bible references when writing files",
+      "description": "After a file is written or edited, detect Bible references in it and remind the agent to verify them against the FaithGPT Bible database. Off by default.",
+      "required": false,
+      "default": false
+    }
+  }
+}

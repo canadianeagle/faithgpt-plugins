@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "bible": {
+      "type": "http",
+      "url": "https://api.faithgpt.io/mcp"
+    }
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "faithgpt",
+  "version": "1.0.0",
+  "description": "Scripture-grounded Bible study, devotionals, and doctrine review. Every verse is fetched from FaithGPT's Bible database instead of recalled from memory, so quotations are real and correctly attributed.",
+  "author": {
+    "name": "FAITHGPT AI INC",
+    "email": "hello@faithgpt.io",
+    "url": "https://www.faithgpt.io"
+  },
+  "homepage": "https://www.faithgpt.io/api/mcp/",
+  "repository": "https://github.com/canadianeagle/faithgpt-plugins",
+  "license": "MIT",
+  "keywords": [
+    "bible",
+    "scripture",
+    "christian",
+    "theology",
+    "devotional",
+    "prayer",
+    "doctrine",
+    "sermon",
+    "ministry"
+  ],
+  "extensions": {
+    "com.openai": {
+      "hooks": "./hooks/hooks.json",
+      "interface": {
+        "displayName": "FaithGPT",
+        "shortDescription": "Look up Scripture, study the Bible, and review doctrine without inventing verses.",
+        "longDescription": "FaithGPT brings a real Bible database into your agent session. Look up exact passages in KJV, ASV, or YLT; find verses by topic; study a passage in context; write devotionals rooted in Scripture; and review sermons or teaching for doctrinal soundness. The plugin's core rule is that Scripture is fetched, never recalled: a verse an agent half-remembers is a verse it can misquote, so every quotation comes from the database with its reference and translation attached. Built for Christians, Bible study groups, pastors, ministry leaders, theology students, and developers building Christian software.",
+        "developerName": "FAITHGPT AI INC",
+        "category": "Education",
+        "capabilities": ["Read"],
+        "websiteURL": "https://www.faithgpt.io",
+        "privacyPolicyURL": "https://www.faithgpt.io/privacy",
+        "termsOfServiceURL": "https://www.faithgpt.io/terms",
+        "defaultPrompt": [
+          "Look up Romans 8:28 in KJV and explain its context",
+          "Find Bible passages about hope during grief",
+          "Write a short devotional about trusting God through uncertainty",
+          "Review this sermon claim for doctrinal soundness"
+        ],
+        "brandColor": "#F59E0B",
+        "composerIcon": "./assets/icon.png",
+        "logo": "./assets/logo.png"
+      }
+    }
+  }
+}

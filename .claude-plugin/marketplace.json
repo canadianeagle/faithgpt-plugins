@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "faithgpt",
+  "description": "Official FaithGPT plugins. Scripture-grounded Bible study, devotionals, and doctrine review backed by a real Bible database.",
+  "version": "1.0.0",
+  "owner": {
+    "name": "FAITHGPT AI INC",
+    "email": "hello@faithgpt.io",
+    "url": "https://www.faithgpt.io"
+  },
+  "plugins": [
+    {
+      "name": "faithgpt",
+      "source": "./faithgpt",
+      "displayName": "FaithGPT",
+      "description": "Scripture-grounded Bible study, devotionals, and doctrine review. Every verse is fetched from FaithGPT's Bible database instead of recalled from memory, so quotations are real and correctly attributed.",
+      "version": "1.0.0",
+      "author": {
+        "name": "FAITHGPT AI INC",
+        "email": "hello@faithgpt.io",
+        "url": "https://www.faithgpt.io"
+      },
+      "homepage": "https://www.faithgpt.io/api/mcp/",
+      "repository": "https://github.com/canadianeagle/faithgpt-plugins",
+      "license": "MIT",
+      "category": "productivity",
+      "keywords": [
+        "bible",
+        "scripture",
+        "christian",
+        "theology",
+        "devotional",
+        "prayer",
+        "doctrine",
+        "sermon",
+        "ministry"
+      ]
+    }
+  ]
+}
