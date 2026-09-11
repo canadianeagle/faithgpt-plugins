@@ -11,8 +11,8 @@ jobs:
     name: Scripture reference detector
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       # No install step on purpose. The detector has no dependencies, which is
@@ -24,8 +24,8 @@ jobs:
     name: Manifests and marketplace
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - name: Every manifest is valid JSON
@@ -78,8 +78,8 @@ jobs:
     name: Write hook is opt-in and non-blocking
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
       - name: Silent when the option is off
